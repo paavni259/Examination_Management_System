@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: rgb(230, 237, 246);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #ffffff;
+            padding: 28px 34px;
+            border-radius: 10px;
+            width: 340px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 14px;
+            color: #444;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cfd6e0;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            background: #f9fbfd;
+        }
+        input:focus, select:focus {
+            border-color: #6c9df0;
+            outline: none;
+            background: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 11px;
+            background: #6c9df0;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        button:hover {
+            background: #527edb;
+        }
+        .error {
+            color: #d9534f;
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        p {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #555;
+        }
+        a {
+            color: #6c9df0;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #527edb;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+
+    <p th:if="${error}" th:text="${error}" class="error"></p>
+
+    <form th:action="@{/login}" method="post">
+        <label>Email or Roll Number</label>
+        <input type="text" name="identifier" placeholder="Enter your email or roll number" required />
+        
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required />
+
+        <label>User Type</label>
+        <select name="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="student">Student</option>
+            <option value="faculty">Faculty</option>
+        </select>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p>Don’t have an account?<br/>
+        <a th:href="@{/students/register-form}">Register as Student</a> | 
+        <a th:href="@{/faculty/register-form}">Register as Faculty</a>
+    </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f8fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        p {
+            margin: 8px 0;
+            color: #333;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: #4CAF50;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        a:hover {
+            background: #43a047;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Registration Successful!</h2>
+    <p th:text="'Student ID: ' + ${student.id}"></p>
+    <p th:text="'Name: ' + ${student.name}"></p>
+    <p th:text="'Email: ' + ${student.email}"></p>
+    <p th:text="'Roll Number: ' + ${student.rollNumber}"></p>
+
+    <a th:href="@{/}">Go to Login</a>
+</div>
+</body>
+</html>

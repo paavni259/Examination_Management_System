@@ -1,0 +1,16 @@
+com/example/apcproject/repository/AnswerRepository.class
+com/example/apcproject/repository/QuestionRepository.class
+com/example/apcproject/repository/ResultRepository.class
+com/example/apcproject/ApcProjectApplication.class
+com/example/apcproject/repository/StudentRepository.class
+com/example/apcproject/model/Answer.class
+com/example/apcproject/service/StudentService.class
+com/example/apcproject/model/Question.class
+com/example/apcproject/repository/ExamRepository.class
+com/example/apcproject/controller/FacultyController.class
+com/example/apcproject/service/FacultyService.class
+com/example/apcproject/exception/GlobalExceptionHandler.class
+com/example/apcproject/controller/StudentController.class
+com/example/apcproject/model/Exam.class
+com/example/apcproject/model/Student.class
+com/example/apcproject/model/Result.class

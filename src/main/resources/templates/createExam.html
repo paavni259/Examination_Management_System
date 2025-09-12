@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Create Exam</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 50px 0;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      padding: 40px 50px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px 30px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    input, textarea {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #f9fafb;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #fff;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    button {
+      display: inline-block;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 50px 0 30px;
+    }
+
+    .question-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .question-table th, .question-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .question-table th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .question-table tr:hover {
+      background: #f9fafb;
+    }
+
+    .action-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 500;
+      margin-right: 6px;
+      text-decoration: none;
+    }
+
+    .edit-btn { background: #f59e0b; }
+    .edit-btn:hover { background: #d97706; }
+
+    .delete-btn { background: #ef4444; }
+    .delete-btn:hover { background: #b91c1c; }
+
+    .save-btn { background: #16a34a; }
+    .save-btn:hover { background: #15803d; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 35px;
+      font-size: 15px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 500;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .edit-form {
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Create Exam</h2>
+
+  <!-- Exam Form -->
+  <form th:action="@{/faculty/exams}" method="post" th:object="${exam}">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Exam Title</label>
+        <input type="text" th:field="*{title}" placeholder="e.g. Midterm Exam" required />
+      </div>
+
+      <div class="form-group">
+        <label>Course Name</label>
+        <input type="text" th:field="*{course}" placeholder="e.g. Java Programming" required />
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" th:field="*{date}" required />
+      </div>
+
+      <div class="form-group">
+        <label>Duration (minutes)</label>
+        <input type="number" th:field="*{duration}" placeholder="60" required />
+      </div>
+    </div>
+
+    <button type="submit">Create Exam</button>
+  </form>
+
+  <hr>
+
+  <!-- Add Questions -->
+  <div th:if="${examId}">
+    <h2>Add Question</h2>
+    <form th:action="@{/faculty/exams/{id}/questions(id=${examId})}"
+      method="post" th:object="${question}">
+    <!-- ✅ keep examId hidden -->
+    <input type="hidden" name="examId" th:value="${examId}" />
+
+    <div class="form-grid">
+        <div class="form-group full-width">
+            <label>Question Text</label>
+            <textarea th:field="*{questionText}" required></textarea>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Options (comma separated)</label>
+            <input type="text" th:field="*{options}" required />
+        </div>
+
+        <div class="form-group full-width">
+            <label>Correct Answer</label>
+            <input type="text" th:field="*{correctAnswer}" required />
+        </div>
+    </div>
+
+    <button type="submit">Add Question</button>
+</form>
+
+<table class="question-table" th:if="${!#lists.isEmpty(questions)}">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Question</th>
+      <th>Correct Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="q,iter : ${questions}">
+      <td th:text="${iter.index+1}"></td>
+      <td th:text="${q.questionText}"></td>
+      <td th:text="${q.correctAnswer}"></td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <a class="back-link" th:href="@{/}">← Back to Home</a>
+</div>
+
+<script>
+  function toggleEdit(btn) {
+    const row = btn.closest('tr');
+    const form = row.querySelector('.edit-form');
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
+
+</body>
+</html>

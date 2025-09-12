@@ -1,0 +1,16 @@
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/ApcProjectApplication.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/controller/FacultyController.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/controller/StudentController.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/exception/GlobalExceptionHandler.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/model/Answer.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/model/Exam.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/model/Question.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/model/Result.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/model/Student.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/repository/AnswerRepository.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/repository/ExamRepository.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/repository/QuestionRepository.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/repository/ResultRepository.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/repository/StudentRepository.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/service/FacultyService.java
+/Users/pro/Downloads/apcproject-mongodb/src/main/java/com/example/apcproject/service/StudentService.java

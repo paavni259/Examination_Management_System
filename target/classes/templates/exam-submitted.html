@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Exam Submitted</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .result {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .pass {
+            background-color: #e6f9ec;
+            color: #1a7a36;
+        }
+        .fail {
+            background-color: #fde8e8;
+            color: #b91c1c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background: #f3f3f3;
+        }
+        .actions {
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 8px;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn.secondary {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Exam Submitted</h1>
+    <p th:text="${message}">Your responses have been recorded.</p>
+
+    <div th:if="${result != null}" 
+         th:class="'result ' + (${#strings.equalsIgnoreCase(result.status,'Pass')} ? 'pass' : 'fail')">
+        <p><strong>Marks:</strong> <span th:text="${result.marks}">0</span></p>
+        <p><strong>Status:</strong> <span th:text="${result.status}">Pass</span></p>
+    </div>
+
+    <div th:if="${answers != null}">
+        <h2 style="font-size:16px; margin-top:20px;">Your Answers</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Question ID</th>
+                <th>Your Answer</th>
+                <th>Marks</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${answers}">
+                <td th:text="${a.questionId}">QID</td>
+                <td th:text="${a.answerText}">Answer</td>
+                <td th:text="${a.marks}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <a class="btn" th:href="@{/students/exams}">Back to Exams</a>
+
+        <a class="btn secondary" th:href="@{/}">Home</a>
+    </div>
+    
+</div>
+</body>
+</html>

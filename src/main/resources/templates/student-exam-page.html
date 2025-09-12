@@ -1,0 +1,231 @@
+<!-- src/main/resources/templates/student-exam-page.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Take Exam</title>
+    <meta charset="UTF-8"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 760px;
+            margin: auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            margin: 0;
+            color: #333;
+            font-size: 22px;
+        }
+        
+        .meta {
+            color: #555;
+            margin: 0 0 14px 0;
+        }
+        
+        .timer {
+            font-weight: bold;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        
+        .progress {
+            margin: 10px 0 18px 0;
+            color: #444;
+        }
+        
+        .q {
+            margin-bottom: 18px;
+            display: none; /* one question at a time */
+        }
+        
+        .q.active {
+            display: block;
+        }
+        
+        h4 {
+            margin: 8px 0 10px;
+            color: #222;
+            font-size: 16px;
+        }
+        
+        .opt {
+            display: block;
+            margin: 5px 0 5px 12px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        input[type="radio"] {
+            margin-right: 6px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .btn {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn.alt {
+            background: #666;
+        }
+        
+        hr {
+            margin: 14px 0;
+            border: 0;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .top-links {
+            margin-bottom: 12px;
+        }
+        
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-links">
+        <a th:href="@{/students/exams}">&larr; Back to Exams</a>
+    </div>
+
+    <div class="header">
+        <h2 th:text="${exam.title}">Exam Title</h2>
+        <!-- Timer reads minutes from exam.duration -->
+        <div class="timer" id="timer"
+             th:attr="data-minutes=${exam.duration}">--:--</div>
+    </div>
+    <p class="meta">
+        <span th:text="'Course: ' + ${exam.course}">Course</span> &nbsp;•&nbsp;
+        <span th:text="'Duration: ' + ${exam.duration} + ' mins'">Duration</span>
+    </p>
+
+    <div class="progress">
+        <span id="progressText">Question 1 of <span th:text="${#lists.size(questions)}">N</span></span>
+    </div>
+
+    <form th:action="@{/students/exams/{id}/submit(id=${exam.id})}"
+          th:object="${wrapper}" method="post" id="examForm">
+
+        <div th:each="q, iStat : ${questions}"
+             class="q"
+             th:classappend="${iStat.index == 0} ? ' active'">
+
+            <h4 th:text="'Q' + ${iStat.index + 1} + '. ' + ${q.questionText}">Question</h4>
+
+            <!-- Hidden binding fields -->
+            <input type="hidden" th:field="*{answers[__${iStat.index}__].questionId}" th:value="${q.id}"/>
+            <input type="hidden" th:field="*{answers[__${iStat.index}__].examId}" th:value="${exam.id}"/>
+            <input type="hidden" th:field="*{answers[__${iStat.index}__].studentId}"/>
+
+            <!-- Options -->
+            <div th:each="opt : ${#strings.arraySplit(q.options, ',')}">
+                <label class="opt">
+                    <input type="radio"
+                           th:field="*{answers[__${iStat.index}__].answerText}"
+                           th:value="${#strings.trim(opt)}" required/>
+                    <span th:text="${#strings.trim(opt)}"></span>
+                </label>
+            </div>
+            <hr/>
+        </div>
+
+        <div class="nav">
+            <button type="button" class="btn alt" id="prevBtn">Previous</button>
+            <button type="button" class="btn" id="nextBtn">Next</button>
+            <button type="submit" class="btn" id="submitBtn" disabled>Submit Exam</button>
+        </div>
+    </form>
+</div>
+
+<script>
+(function(){
+    // ====== Simple paginator (one question at a time) ======
+    const questions = Array.from(document.querySelectorAll('.q'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressText = document.getElementById('progressText');
+
+    let idx = 0;
+    const total = questions.length;
+
+    function updateView() {
+        questions.forEach((el, i) => el.classList.toggle('active', i === idx));
+        prevBtn.disabled = idx === 0;
+        nextBtn.disabled = idx === total - 1;
+        submitBtn.disabled = idx !== total - 1; // enable submit only on last question
+        progressText.textContent = `Question ${idx + 1} of ${total}`;
+    }
+
+    prevBtn.addEventListener('click', () => { if (idx > 0) { idx--; updateView(); } });
+    nextBtn.addEventListener('click', () => { if (idx < total - 1) { idx++; updateView(); } });
+
+    updateView();
+
+    // ====== Countdown timer (auto-submit on zero) ======
+    const timerEl = document.getElementById('timer');
+    const minutesAttr = timerEl.getAttribute('data-minutes');
+    let remaining = Math.max(1, parseInt(minutesAttr || '1', 10)) * 60; // seconds
+
+    function fmt(sec){
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    timerEl.textContent = fmt(remaining);
+    const tick = setInterval(() => {
+        remaining--;
+        timerEl.textContent = fmt(Math.max(0, remaining));
+        if (remaining <= 0) {
+            clearInterval(tick);
+            // Auto-submit when time is up
+            document.getElementById('examForm').submit();
+        }
+    }, 1000);
+})();
+</script>
+</body>
+</html>

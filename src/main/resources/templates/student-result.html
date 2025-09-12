@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Result</title>
+</head>
+<body>
+    <h2>Exam Result</h2>
+    <p th:text="'Exam ID: ' + ${result.examId}"></p>
+    <p th:text="'Marks: ' + ${result.marks}"></p>
+    <p th:text="'Status: ' + ${result.status}"></p>
+
+    <a th:href="@{/}">Back to Home</a>
+</body>
+</html>

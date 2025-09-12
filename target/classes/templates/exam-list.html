@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Available Exams</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+        }
+        .topbar {
+            background: #1d4ed8;
+            color: #fff;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .student-info {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .profile {
+            position: relative;
+            cursor: pointer;
+        }
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 15px;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 44px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            animation: fadeIn 0.2s ease;
+        }
+        .dropdown a {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+        .dropdown a:hover {
+            background: #f3f4f6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 32px 36px;
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        h2 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 28px;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background: #f8fafc;
+            color: #334155;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s ease;
+        }
+        tr:hover {
+            background: #f9fafb;
+        }
+        .action-link {
+            background: #2563eb;
+            color: #fff;
+            padding: 7px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .action-link:hover {
+            background: #1e40af;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="student-info">
+        Welcome, <span th:text="${student.name}"></span>
+        (<span th:text="${student.rollNumber}"></span>)
+    </div>
+    <div class="profile" onclick="toggleDropdown()">
+        <div class="profile-icon" th:text="${#strings.substring(student.name,0,1)}">S</div>
+        <div class="dropdown" id="profileDropdown">
+            <a th:href="@{/students/change-password}">Change Password</a>
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Available Exams</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Course</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="exam : ${exams}">
+            <td th:text="${exam.title}"></td>
+            <td th:text="${exam.course}"></td>
+            <td th:text="${exam.date}"></td>
+            <td th:text="${exam.duration} + ' mins'"></td>
+            <td>
+                <a class="action-link"
+                   th:href="@{/students/exams/{id}/start(id=${exam.id})}">
+                    Take Exam
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById('profileDropdown').style.display =
+            document.getElementById('profileDropdown').style.display === 'block' ? 'none' : 'block';
+    }
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.profile')) {
+            document.getElementById('profileDropdown').style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
