@@ -1,179 +1,244 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Available Exams</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-        }
-        .topbar {
-            background: #1d4ed8;
-            color: #fff;
-            padding: 16px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        .student-info {
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .profile {
-            position: relative;
-            cursor: pointer;
-        }
-        .profile-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #3b82f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 15px;
-            color: #fff;
-            border: 2px solid #fff;
-        }
-        .dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 44px;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-width: 180px;
-            animation: fadeIn 0.2s ease;
-        }
-        .dropdown a {
-            display: block;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: #333;
-            font-size: 14px;
-            transition: background 0.2s ease;
-        }
-        .dropdown a:hover {
-            background: #f3f4f6;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Exams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #6d28d9;
+      --primary-hover: #5b21b6;
+      --primary-light: #ede9fe;
+      --primary-rgb: 109, 40, 217;
+      --bg-light: #f9fafb;
+      --bg-dark: #111827;
+      --bg-panel: #ffffff;
+      --text-light: #f9fafb;
+      --text-dark: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      overflow: hidden;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #ffffff;
-            padding: 32px 36px;
-            border-radius: 12px;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
-        }
-        h2 {
-            text-align: center;
-            color: #1e293b;
-            margin-bottom: 28px;
-            font-size: 24px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        th, td {
-            padding: 14px 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-        th {
-            background: #f8fafc;
-            color: #334155;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        tr {
-            border-bottom: 1px solid #e2e8f0;
-            transition: background 0.2s ease;
-        }
-        tr:hover {
-            background: #f9fafb;
-        }
-        .action-link {
-            background: #2563eb;
-            color: #fff;
-            padding: 7px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-        .action-link:hover {
-            background: #1e40af;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    /* ---------- Topbar ---------- */
+    .topbar {
+      background-color: var(--bg-panel);
+      color: var(--text-dark);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      position: relative;
+    }
+    .profile {
+      position: relative;
+    }
+    .profile-icon {
+        width: 40px; height: 40px; border-radius: 50%;
+        background-color: var(--primary-color);
+        display: flex; justify-content: center; align-items: center;
+        font-weight: 700; color: #fff; cursor: pointer;
+    }
+    /* Dropdown */
+    .dropdown {
+      position: absolute;
+      top: 55px;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 100;
+    }
+    .dropdown a {
+      padding: 0.75rem 1rem;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .dropdown a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+    }
+    .profile.open .dropdown {
+      display: flex;
+    }
+
+    /* ---------- App Layout ---------- */
+    .app-container {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        height: calc(100vh - 65px);
+    }
+    /* Left Panel */
+    .exam-list-panel {
+        background-color: var(--bg-dark);
+        border-right: 1px solid #1f2937;
+        display: flex;
+        flex-direction: column;
+    }
+    .exam-list-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #1f2937;
+    }
+    .exam-list-header h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-light);
+    }
+    .exam-list-items { list-style: none; overflow-y: auto; flex-grow: 1; }
+    .exam-list-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #1f2937;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border-left: 4px solid transparent;
+    }
+    .exam-list-item:hover { background-color: #1f2937; }
+    .exam-list-item.active { background-color: #1f2937; border-left-color: var(--primary-color); }
+    .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; }
+    .item-header strong { font-weight: 600; color: var(--text-light); }
+    .item-header .duration { font-size: 0.8rem; color: #9ca3af; }
+    .item-course { font-size: 0.875rem; color: #9ca3af; }
+
+    /* Right Panel */
+    .exam-detail-panel { padding: 3rem 4rem; overflow-y: auto; }
+    .detail-course-tag {
+        display: inline-block;
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+    .detail-title { font-size: 2.75rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.5rem; line-height: 1.2; }
+    hr { border: none; height: 1px; background-color: var(--border-color); margin: 2rem 0; }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+    .detail-item .label { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .detail-item .value { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .detail-item .value svg { width: 20px; height: 20px; }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: var(--text-light); text-decoration: none; padding: 1rem 2rem;
+      border-radius: 8px; font-weight: 600; font-size: 1rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: all 0.3s; border: none;
+      box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.25);
+    }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-3px); box-shadow: 0 7px 25px rgba(var(--primary-rgb), 0.3); }
+
+    /* No Exams Card */
+    .no-exams-card {
+      max-width: 500px; margin: 5rem auto; background: #fff;
+      padding: 3rem 2rem; border-radius: 16px; text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid var(--border-color);
+      animation: fadeIn 0.6s ease-out;
+    }
+    .no-exams-icon { width: 70px; height: 70px; color: var(--primary-color); margin-bottom: 1.5rem; }
+    .no-exams-card h2 { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+    .no-exams-card p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2rem; line-height: 1.5; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="student-info">
-        Welcome, <span th:text="${student.name}"></span>
-        (<span th:text="${student.rollNumber}"></span>)
+  <div class="student-info">
+    Welcome, <strong th:text="${student.name}">Student Name</strong>
+  </div>
+  <div class="profile" id="profileMenu">
+    <div class="profile-icon" th:text="${student.name != null ? #strings.substring(student.name,0,1) : '?'}">S</div>
+    <div class="dropdown">
+      <a th:href="@{/change-password}">Change Password</a>
+      <a th:href="@{/logout}">Logout</a>
     </div>
-    <div class="profile" onclick="toggleDropdown()">
-        <div class="profile-icon" th:text="${#strings.substring(student.name,0,1)}">S</div>
-        <div class="dropdown" id="profileDropdown">
-            <a th:href="@{/students/change-password}">Change Password</a>
-            <a th:href="@{/logout}">Logout</a>
-        </div>
-    </div>
+  </div>
 </div>
 
-<div class="container">
-    <h2>Available Exams</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Course</th>
-            <th>Date</th>
-            <th>Duration</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="exam : ${exams}">
-            <td th:text="${exam.title}"></td>
-            <td th:text="${exam.course}"></td>
-            <td th:text="${exam.date}"></td>
-            <td th:text="${exam.duration} + ' mins'"></td>
-            <td>
-                <a class="action-link"
-                   th:href="@{/students/exams/{id}/start(id=${exam.id})}">
-                    Take Exam
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<!-- Main Layout -->
+<div class="app-container" th:if="${not #lists.isEmpty(exams)}">
+  <!-- Left Panel -->
+  <div class="exam-list-panel">
+    <div class="exam-list-header">
+      <h2>Available Exams</h2>
+    </div>
+    <ul class="exam-list-items">
+      <li class="exam-list-item"
+          th:each="exam, iterStat : ${exams}"
+          th:classappend="${iterStat.index == 0 ? 'active' : ''}"
+          th:attr="data-title=${exam.title}, data-course=${exam.course}, data-date=${exam.date != null ? #temporals.format(exam.date, 'dd MMMM yyyy') : 'TBA'}, data-duration=${exam.duration + ' minutes'}, data-link=@{/students/exams/{id}/start(id=${exam.id})}">
+        <div class="item-header">
+            <strong th:text="${exam.title}">Exam Title</strong>
+            <span class="duration" th:text="${exam.duration} + ' min'">60 min</span>
+        </div>
+        <span class="item-course" th:text="${exam.course}">Course Name</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="exam-detail-panel">
+    <div id="detail-panel-content">
+      <div class="detail-course-tag" id="detail-course">Course Name</div>
+      <h1 class="detail-title" id="detail-title">Exam Title</h1>
+      <hr>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div>
+            <div class="label">Exam Date</div>
+            <div class="value" id="detail-date">
+              <span>15 October 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div>
+            <div class="label">Duration</div>
+            <div class="value" id="detail-duration">
+              <span>60 minutes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="btn-primary" id="detail-link">Take Exam</a>
+    </div>
+  </div>
+</div>
+
+<!-- No Exams Card -->
+<div th:if="${#lists.isEmpty(exams)}" class="no-exams-card">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="no-exams-icon">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+  <h2>No Exams Available</h2>
+  <p>Looks like there aren’t any exams scheduled right now.<br>
+     Please check back later or contact your faculty.</p>
+  <a th:href="@{/login}" class="btn-primary">Back to Login</a>
 </div>
 
 <script>
-    function toggleDropdown() {
-        document.getElementById('profileDropdown').style.display =
-            document.getElementById('profileDropdown').style.display === 'block' ? 'none' : 'block';
-    }
-    document.addEventListener('click', function (e) {
-        if (!e.target.closest('.profile')) {
-            document.getElementById('profileDropdown').style.display = 'none';
-        }
-    });
+  // Toggle dropdown
+  document.querySelector(".profile-icon").addEventListener("click", function() {
+    document.getElementById("profileMenu").classList.toggle("open");
+  });
 </script>
 
 </body>

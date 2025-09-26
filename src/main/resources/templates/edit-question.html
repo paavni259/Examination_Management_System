@@ -1,0 +1,122 @@
+<!-- src/main/resources/templates/edit-question.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Edit Question</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 50px 0;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 40px 50px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      background: #f9fafb;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #1e40af;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 15px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Edit Question</h2>
+  <form th:action="@{/faculty/questions/{id}/edit(id=${question.id})}"
+        method="post" th:object="${question}">
+    <div class="form-group">
+      <label>Question Text</label>
+      <textarea th:field="*{questionText}" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Options (comma separated)</label>
+      <input type="text" th:field="*{options}" required />
+    </div>
+
+    <div class="form-group">
+      <label>Correct Answer</label>
+      <input type="text" th:field="*{correctAnswer}" required />
+    </div>
+
+    <button type="submit" class="btn">💾 Save Changes</button>
+  </form>
+  <a th:href="@{/faculty/exams/createExam(examId=${question.examId})}" class="back-link">← Back to Exam</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Manage Students</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #eef2ff;
+      --bg-main: #f8fafc;
+      --bg-sidebar: #1e293b;
+      --bg-card: #ffffff;
+      --text-light: #f8fafc;
+      --text-dark: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --green-status: #22c55e;
+      --red-status: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-dark); }
+    .admin-container { display: flex; }
+    .sidebar { width: 250px; background-color: var(--bg-sidebar); color: var(--text-light); min-height: 100vh; position: fixed; }
+    .sidebar-header { padding: 1.5rem; font-size: 1.5rem; font-weight: 700; text-align: center; border-bottom: 1px solid #334155; }
+    .sidebar-header span { color: var(--primary-color); }
+    .sidebar-nav { list-style: none; padding: 1rem 0; }
+    .sidebar-nav li a { color: #cbd5e1; text-decoration: none; display: block; padding: .8rem 1.5rem; border-left: 4px solid transparent; }
+    .sidebar-nav li a:hover { background-color: #334155; color: var(--text-light); }
+    .sidebar-nav li.active a { background: linear-gradient(90deg, var(--primary-dark), var(--primary-color)); color: var(--text-light); border-left-color: var(--primary-light); }
+    .main-wrapper { margin-left: 250px; width: calc(100% - 250px); }
+    .top-bar { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; }
+    .content { padding: 2rem; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .btn-primary { background: linear-gradient(90deg, var(--primary-dark), var(--primary-color)); color: #fff; padding: .6rem 1rem; border-radius: 8px; text-decoration: none; }
+    .table-wrap { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: .8rem; border-bottom: 1px solid var(--border-color); text-align: left; }
+    thead th { color: var(--text-secondary); font-size: .85rem; text-transform: uppercase; }
+    .tag { display: inline-block; padding: .25rem .6rem; border-radius: 999px; font-size: .8rem; }
+    .tag.green { background: #dcfce7; color: #166534; }
+    .tag.red { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+<div class="admin-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">APC<span>.</span>Admin</div>
+    <ul class="sidebar-nav">
+      <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+      <li class="active"><a th:href="@{/admin/students}">Students</a></li>
+      <li><a th:href="@{/admin/faculty}">Faculty</a></li>
+      <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <div class="main-wrapper">
+    <div class="top-bar"><h1>Student Management</h1></div>
+
+    <main class="content">
+      <div class="page-header">
+        <h2>All Students</h2>
+        <!-- (Optional) Add-Student page later -->
+        <a class="btn-primary" href="javascript:void(0)" onclick="alert('Coming soon')">Add Student</a>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email / Roll</th>
+              <th>Date Joined</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="s : ${students}">
+              <td th:text="${s.name}">Name</td>
+              <td>
+                <div th:text="${s.email}">email@example.com</div>
+                <div style="color:#6b7280; font-size:.85rem" th:text="${s.rollNumber}">ROLL001</div>
+              </td>
+              <td th:text="${s.createdAt}">2025-01-01</td>
+              <td>
+                <span class="tag" th:classappend="${#strings.equalsIgnoreCase(s.status,'Active')} ? ' green' : ' red'"
+                      th:text="${s.status != null ? s.status : 'Active'}">Active</span>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(students)}">
+              <td colspan="4" style="color:#6b7280; text-align:center; padding:1rem;">No students found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

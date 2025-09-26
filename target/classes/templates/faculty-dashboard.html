@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color-start: #6d28d9;
+      --primary-color-end: #9333ea;
+      --primary-gradient: linear-gradient(135deg, var(--primary-color-start), var(--primary-color-end));
+      --primary-rgb: 109, 40, 217;
+      --bg-main: #f9fafb;
+      --bg-sidebar: #111827;
+      --bg-card: #ffffff;
+      --text-light: #f9fafb;
+      --text-dark: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #f3f4f6;
+      --dot-color: #e5e7eb;
+      --shadow-color: rgba(0, 0, 0, 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+      background-size: 25px 25px;
+      display: flex;
+    }
+
+    .main-container { display: flex; width: 100%; }
+
+    /* --- Sidebar --- */
+    .sidebar {
+      width: 250px; background-color: var(--bg-sidebar);
+      color: var(--text-light); display: flex; flex-direction: column;
+      min-height: 100vh; position: fixed; border-right: 1px solid #1f2937;
+    }
+    .sidebar-header { padding: 1.5rem; font-size: 1.5rem; font-weight: 800; text-align: center; }
+    .sidebar-header span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sidebar-nav { list-style: none; padding: 1rem 0; flex-grow: 1; }
+    .sidebar-nav li a {
+      color: #9ca3af; text-decoration: none; font-weight: 500;
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.9rem 1.5rem; margin: 0 1rem; border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .sidebar-nav li a:hover { background-color: #374151; color: var(--text-light); }
+    .sidebar-nav li.active a { background: var(--primary-gradient); color: var(--text-light); box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3); }
+    .sidebar-nav li.logout { margin-top: auto; }
+    .sidebar-nav li.logout a { color: #fca5a5; }
+    .sidebar-nav li.logout a:hover { background-color: #ef4444; color: var(--text-light); }
+    .sidebar-nav .icon { width: 20px; height: 20px; }
+
+    /* --- Main Content Wrapper --- */
+    .main-wrapper { margin-left: 250px; flex: 1; padding: 2rem; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .topbar h1 { font-size: 2rem; font-weight: 800; }
+    
+    /* --- Content & Cards --- */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem; margin-bottom: 2rem;
+    }
+    .card {
+      background-color: var(--bg-card); border-radius: 16px; padding: 1.5rem;
+      border: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 1rem;
+      box-shadow: 0 4px 10px var(--shadow-color);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      animation: fadeInUp 0.5s ease-out forwards; opacity: 0;
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 15px 25px rgba(var(--primary-rgb), 0.1); }
+    .card .icon-wrapper {
+      background: var(--primary-gradient); color: var(--text-light);
+      border-radius: 50%; padding: 14px; display: flex;
+      box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
+    }
+    .card-content h3 { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-content .value { font-size: 2.25rem; font-weight: 800; color: var(--text-dark); line-height: 1.1; }
+    
+    .card:nth-child(1) { animation-delay: 0.1s; } .card:nth-child(2) { animation-delay: 0.2s; } .card:nth-child(3) { animation-delay: 0.3s; }
+
+    /* --- Data Table / Panels --- */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    .panel {
+      background-color: var(--bg-card); border-radius: 16px;
+      border: 1px solid var(--border-color); padding: 1.5rem;
+      box-shadow: 0 4px 10px var(--shadow-color);
+      animation: fadeInUp 0.5s ease-out 0.4s forwards; opacity: 0;
+    }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .panel-header h2 { font-size: 1.25rem; font-weight: 700; }
+    
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+    thead th { font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background-color: var(--bg-main); }
+    
+    .user-info { display: flex; align-items: center; gap: 0.75rem; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary-color-start); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.8rem; }
+    
+    .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500; }
+    .badge.pass { background: #dcfce7; color: #166534; }
+    .badge.fail { background: #fee2e2; color: #991b1b; }
+
+    .list-item { display: flex; justify-content: space-between; padding: 0.75rem 0; }
+    .list-item:not(:last-child) { border-bottom: 1px solid var(--border-color); }
+    .btn {
+      background: var(--primary-gradient); color: var(--text-light); text-decoration: none;
+      padding: 0.7rem 1.3rem; border-radius: 8px; font-weight: 500; display: inline-block;
+      transition: all 0.3s; border: none; box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.2);
+      margin-top: 1rem;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(var(--primary-rgb), 0.3); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">Faculty<span>.</span></div>
+    <ul class="sidebar-nav">
+      <li class="active"><a th:href="@{/faculty/dashboard}">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+        Dashboard
+      </a></li>
+      <li><a th:href="@{/faculty/create-exam}">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        Create Exam
+      </a></li>
+      <li class="logout"><a th:href="@{/logout}">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+        Logout
+      </a></li>
+    </ul>
+  </aside>
+
+  <div class="main-wrapper">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <div>Welcome, <strong th:text="${faculty.name}">Faculty</strong></div>
+    </div>
+    
+    <div class="stats">
+      <div class="card">
+        <div class="icon-wrapper"></div>
+        <div class="card-content">
+          <h3>Total Students</h3>
+          <p class="value" th:text="${totalStudents}">120</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon-wrapper"></div>
+        <div class="card-content">
+          <h3>Total Exams</h3>
+          <p class="value" th:text="${totalExams}">8</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon-wrapper"></div>
+        <div class="card-content">
+          <h3>Pass Rate</h3>
+          <p class="value" th:text="${passRate + '%'}">75%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="panel"> <div class="panel-header">
+          <h2>Recent Results</h2>
+          <a href="#">View All</a>
+        </div>
+        <table>
+          <thead>
+            <tr> <th>Student</th> <th>Exam</th> <th>Score</th> <th>Status</th> </tr>
+          </thead>
+          <tbody>
+            <tr th:each="result : ${recentResults}">
+              <td>
+                <div class="user-info">
+                  <div class="user-avatar" th:text="${#strings.substring(result.studentName,0,1)}">J</div>
+                  <span th:text="${result.studentName}">John Doe</span>
+                </div>
+              </td>
+              <td th:text="${result.examTitle}">Math Test</td>
+              <td th:text="${result.score}">85</td>
+              <td><span th:classappend="..." class="badge pass">Pass</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Quick Actions</h2>
+        </div>
+        <div class="list-item" th:each="e : ${upcomingExams}">
+          <span th:text="${e.title}">Science Quiz</span>
+          <span th:text="${#temporals.format(e.date,'dd MMM')}">12 Oct</span>
+        </div>
+        <a th:href="@{/faculty/create-exam}" class="btn">+ Create New Exam</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

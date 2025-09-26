@@ -2,100 +2,167 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Submitted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --bg-main: #f9fafb;
+            --bg-card: #ffffff;
+            --text-dark: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --dot-color: #e5e7eb;
+            --green-light: #dcfce7; --green-dark: #166534; --green-status: #22c55e;
+            --red-light: #fee2e2; --red-dark: #991b1b; --red-status: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+            background-size: 25px 25px;
+            padding: 40px 20px;
         }
+
         .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+            padding: 2.5rem;
+            animation: fadeInUp 0.5s ease-out;
         }
-        h1 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: #333;
+
+        .success-icon {
+            width: 80px; height: 80px;
+            background-color: var(--green-light);
+            color: var(--green-status);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
         }
-        p {
-            margin-bottom: 15px;
-            color: #555;
+        .success-icon svg { width: 48px; height: 48px; }
+
+        h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        p { color: var(--text-secondary); margin-bottom: 2rem; }
+
+        /* Result Summary Card */
+        .result-summary-card {
+            background-color: var(--bg-main);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
-        .result {
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 6px;
+
+        .progress-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem auto;
         }
-        .pass {
-            background-color: #e6f9ec;
-            color: #1a7a36;
+        .progress-circle canvas {
+            display: block;
+            width: 100%; height: 100%;
         }
-        .fail {
-            background-color: #fde8e8;
-            color: #b91c1c;
+        .score-text {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        .score-text .score { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); }
+        .score-text .total { font-size: 1rem; color: var(--text-secondary); }
+
+        .status-badge {
+            display: inline-block; padding: 0.25rem 1rem;
+            border-radius: 999px; font-size: 1rem; font-weight: 600;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            font-size: 14px;
-        }
-        th {
-            background: #f3f3f3;
-        }
-        .actions {
-            margin-top: 20px;
-        }
+        .status-pass { background-color: var(--green-light); color: var(--green-dark); }
+        .status-fail { background-color: var(--red-light); color: var(--red-dark); }
+        
+        /* Answer Review Table */
+        .answer-review { text-align: left; }
+        .answer-review h2 { font-size: 1.25rem; margin-bottom: 1rem; text-align: left; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        thead th { background-color: var(--bg-main); font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; }
+        .answer-status svg { width: 20px; height: 20px; }
+        .correct { color: var(--green-status); }
+        .incorrect { color: var(--red-status); }
+        
+        .actions { margin-top: 2rem; display: flex; justify-content: center; gap: 1rem; }
         .btn {
-            display: inline-block;
-            padding: 8px 12px;
-            margin-right: 8px;
-            background: #2563eb;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.75rem 1.5rem; border: none; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 600; text-decoration: none;
+            cursor: pointer; transition: all 0.2s ease;
         }
-        .btn.secondary {
-            background: #555;
-        }
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: var(--bg-main); }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Exam Submitted</h1>
-    <p th:text="${message}">Your responses have been recorded.</p>
+    <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+    </div>
+    <h1>Exam Submitted Successfully!</h1>
+    <p th:text="${message}">Your responses have been recorded and your score has been calculated.</p>
 
-    <div th:if="${result != null}" 
-         th:class="'result ' + (${#strings.equalsIgnoreCase(result.status,'Pass')} ? 'pass' : 'fail')">
-        <p><strong>Marks:</strong> <span th:text="${result.marks}">0</span></p>
-        <p><strong>Status:</strong> <span th:text="${result.status}">Pass</span></p>
+    <div th:if="${result != null}" class="result-summary-card">
+        <div class="progress-circle">
+            <!-- ✅ fixed: use result.score and totalMarks -->
+            <canvas id="score-chart" 
+                    th:attr="data-score=${result.score}, data-total=${totalMarks}"></canvas>
+            <div class="score-text">
+                <span class="score" th:text="${result.score}">0</span>
+                <span class="total" th:text="'out of ' + ${totalMarks}">out of 0</span>
+            </div>
+        </div>
+        <span th:text="${result.status}"
+              class="status-badge"
+              th:classappend="${#strings.equalsIgnoreCase(result.status, 'Pass')} ? 'status-pass' : 'status-fail'">
+              Pass
+        </span>
     </div>
 
-    <div th:if="${answers != null}">
-        <h2 style="font-size:16px; margin-top:20px;">Your Answers</h2>
+    <div th:if="${answers != null}" class="answer-review">
+        <h2>Your Answers</h2>
         <table>
             <thead>
             <tr>
-                <th>Question ID</th>
+                <th>Status</th>
                 <th>Your Answer</th>
                 <th>Marks</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="a : ${answers}">
-                <td th:text="${a.questionId}">QID</td>
+                <td class="answer-status">
+                    <span th:if="${a.isCorrect}" class="correct" title="Correct">
+                        ✔
+                    </span>
+                    <span th:unless="${a.isCorrect}" class="incorrect" title="Incorrect">
+                        ✘
+                    </span>
+                </td>
                 <td th:text="${a.answerText}">Answer</td>
                 <td th:text="${a.marks}">0</td>
             </tr>
@@ -104,11 +171,61 @@
     </div>
 
     <div class="actions">
-        <a class="btn" th:href="@{/students/exams}">Back to Exams</a>
-
-        <a class="btn secondary" th:href="@{/}">Home</a>
+        <a class="btn btn-secondary" th:href="@{/students/dashboard}">Home</a>
+        <a class="btn btn-primary" th:href="@{/students/exams}">Back to Exams</a>
     </div>
-    
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvas = document.getElementById('score-chart');
+        if (!canvas) return;
+
+        const score = parseFloat(canvas.dataset.score) || 0;
+        const total = parseFloat(canvas.dataset.total) || 1;
+        const percentage = total > 0 ? (score / total) : 0;
+        const isPass = percentage >= 0.5;
+
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        const center = size / 2;
+        const radius = size * 0.4;
+        const lineWidth = size * 0.1;
+
+        function drawArc(percentage, color) {
+            ctx.beginPath();
+            ctx.arc(center, center, radius, -Math.PI / 2, -Math.PI / 2 + (percentage * 2 * Math.PI));
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+
+        let currentPercent = 0;
+        const color = isPass ? '#22c55e' : '#ef4444';
+        
+        function animate() {
+            if (currentPercent >= percentage) return;
+            currentPercent += 0.02;
+            ctx.clearRect(0, 0, size, size);
+
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            
+            drawArc(Math.min(currentPercent, percentage), color);
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    });
+</script>
 </body>
 </html>

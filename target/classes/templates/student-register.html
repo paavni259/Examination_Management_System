@@ -1,111 +1,121 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Registration</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #eef2f7; /* same soft background */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .register-container {
-            background: #ffffff;
-            padding: 28px 34px;
-            border-radius: 10px;
-            width: 360px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #2c3e50;
-            font-size: 22px;
-            font-weight: 600;
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-size: 14px;
-            color: #444;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cfd6e0;
-            border-radius: 6px;
-            margin-bottom: 14px;
-            font-size: 14px;
-            background: #f9fbfd;
-        }
-        input:focus {
-            border-color: #6c9df0;
-            outline: none;
-            background: #fff;
-        }
-        button {
-            width: 100%;
-            padding: 11px;
-            background: #6c9df0;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s ease;
-        }
-        button:hover {
-            background: #527edb;
-        }
-        p {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 13px;
-            color: #555;
-        }
-        a {
-            color: #6c9df0;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-            color: #527edb;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Student Registration</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #1e293b;
+    }
+
+    .register-card {
+      background: #ffffff;
+      padding: 40px 45px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #f9fafb;
+      margin-bottom: 14px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      outline: none;
+      background: #fff;
+    }
+
+    .btn-primary {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    a {
+      color: #2563eb;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-<div class="register-container">
-    <h2>Register Student</h2>
+<div class="register-card">
+  <h2>Register Student</h2>
 
-    <!-- Form -->
-    <form th:action="@{/students/register-form}" th:object="${student}" method="post">
-        <label>Name</label>
-        <input type="text" th:field="*{name}" placeholder="Enter your name" required />
+  <form th:action="@{/students/register-form}" th:object="${student}" method="post">
+    <label>Name</label>
+    <input type="text" th:field="*{name}" placeholder="Enter your name" required />
 
-        <label>Roll Number</label>
-<input type="text" th:field="*{rollNumber}" placeholder="Enter your roll number" required />
+    <label>Roll Number</label>
+    <input type="text" th:field="*{rollNumber}" placeholder="Enter your roll number" required />
 
+    <label>Email</label>
+    <input type="email" th:field="*{email}" placeholder="Enter your email" required />
 
-        <label>Email</label>
-        <input type="email" th:field="*{email}" placeholder="Enter your email" required />
+    <label>Password</label>
+    <input type="password" th:field="*{password}" placeholder="Enter your password" required />
 
-        <label>Password</label>
-        <input type="password" th:field="*{password}" placeholder="Enter your password" required />
+    <label>Enrolled Courses (comma separated)</label>
+    <input type="text" th:field="*{enrolledCourses}" placeholder="e.g. Math, Physics" />
 
-        <label>Enrolled Courses (comma separated)</label>
-        <input type="text" th:field="*{enrolledCourses}" placeholder="e.g. Math, Physics" />
+    <button type="submit" class="btn-primary">Register</button>
+  </form>
 
-        <button type="submit">Register</button>
-    </form>
-
-    <p><a th:href="@{/}">Back to Home</a></p>
+  <p><a th:href="@{/}">← Back to Home</a></p>
 </div>
 </body>
 </html>

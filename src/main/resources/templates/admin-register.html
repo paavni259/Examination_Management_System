@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Registration</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #1e293b;
+    }
+    .register-card {
+      background: #ffffff;
+      padding: 40px 45px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #f9fafb;
+      margin-bottom: 16px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    input:focus {
+      border-color: #2563eb;
+      outline: none;
+      background: #fff;
+    }
+    .btn-primary {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 20px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+    p {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #475569;
+    }
+    a {
+      color: #2563eb;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="register-card">
+  <h2>Admin Registration</h2>
+
+  <form th:action="@{/admin/register-form}" th:object="${admin}" method="post">
+    <label>Name</label>
+    <input type="text" th:field="*{name}" placeholder="Enter full name" required />
+
+    <label>Email</label>
+    <input type="email" th:field="*{email}" placeholder="Enter email" required />
+
+    <label>Password</label>
+    <input type="password" th:field="*{password}" placeholder="Enter password" required />
+
+    <button type="submit" class="btn-primary">Register</button>
+  </form>
+
+  <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+</div>
+</body>
+</html>

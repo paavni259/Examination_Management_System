@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APC Platform | The Modern Assessment Solution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Color Palette (Light Mode by default) */
+      --primary-color: #6d28d9;
+      --primary-hover: #5b21b6;
+      --bg-main: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text-main: #111827;
+      --text-secondary: #4b5563;
+      --border-color: #e5e7eb;
+      --illustration-bg: #F3F4F6;
+    }
+
+    body.dark-mode {
+      /* Dark Mode Color Palette */
+      --primary-color: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --bg-main: #111827;
+      --bg-secondary: #1f2937;
+      --text-main: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border-color: #374151;
+      --illustration-bg: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* --- Navigation Bar --- */
+    .navbar {
+      background-color: var(--bg-main);
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky; top: 0; z-index: 100;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+    
+    .logo span { color: var(--primary-color); }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      padding: 8px 12px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--primary-color); }
+    
+    .btn-nav {
+      background-color: var(--primary-color);
+      color: var(--bg-main);
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-left: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .btn-nav:hover {
+        background-color: var(--primary-hover);
+        color: var(--bg-main);
+    }
+
+    #theme-toggle {
+        background: none; border: none; cursor: pointer;
+        color: var(--text-secondary); padding: 8px;
+    }
+    #theme-toggle:hover { color: var(--primary-color); }
+    .icon-sun, .icon-moon { width: 24px; height: 24px; }
+    .dark-mode .icon-sun { display: none; }
+    .icon-moon { display: none; }
+    .dark-mode .icon-moon { display: block; }
+
+    /* --- Hero Section --- */
+    .hero { padding: 80px 0; }
+    
+    .hero .container {
+      display: grid; grid-template-columns: 1fr;
+      align-items: center; gap: 3rem;
+    }
+    
+    @media (min-width: 900px) {
+      .hero .container { grid-template-columns: 1fr 1fr; }
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem; font-weight: 800;
+      color: var(--text-main); letter-spacing: -1.5px;
+      line-height: 1.1; margin-bottom: 1.5rem;
+    }
+
+    .hero-text p { font-size: 1.1rem; margin-bottom: 2.5rem; max-width: 450px; }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--bg-main);
+      padding: 16px 32px; font-size: 1rem; font-weight: 600;
+      text-decoration: none; border-radius: 8px; display: inline-block;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-3px);
+    }
+    
+    .hero-illustration svg { width: 100%; height: auto; }
+    .illustration-bg { fill: var(--illustration-bg); transition: fill 0.3s; }
+    .dark-mode .illustration-accent { fill: var(--primary-color); }
+    .dark-mode .illustration-accent-stroke { stroke: var(--primary-color); }
+    
+    /* --- Feature Sections --- */
+    .feature-section { padding: 80px 0; background-color: var(--bg-secondary); }
+    .feature-section.alt { background-color: var(--bg-main); }
+    
+    .feature-section .container {
+      display: grid; grid-template-columns: 1fr;
+      align-items: center; gap: 3rem;
+    }
+    
+    @media (min-width: 900px) {
+      .feature-section .container, .feature-section.reversed .container {
+        grid-template-columns: 1fr 1fr;
+      }
+      .feature-section.reversed .feature-text { order: 2; }
+      .feature-section.reversed .feature-illustration { order: 1; }
+    }
+    
+    .feature-text h2 {
+      font-size: 2.25rem; font-weight: 700;
+      color: var(--text-main); line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .feature-illustration svg {
+      width: 100%; max-width: 450px;
+      margin: 0 auto; display: block; height: auto;
+    }
+    
+    /* --- CTA Section --- */
+    .cta-section {
+        padding: 80px 0; text-align: center;
+        background-color: var(--bg-secondary);
+    }
+    
+    .cta-section h2 { font-size: 2.5rem; color: var(--text-main); margin-bottom: 1.5rem; }
+    
+    .cta-section p {
+        color: var(--text-secondary); margin-bottom: 2.5rem;
+        max-width: 500px; margin-left: auto; margin-right: auto;
+    }
+    
+    /* --- Footer --- */
+    .footer {
+      text-align: center; padding: 3rem 0;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container">
+      <a href="#" class="logo">ExamSetu<span>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#">About</a>
+        <button id="theme-toggle" title="Toggle theme">
+            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.95-4.243l-1.591 1.591M5.25 12H3m4.243-4.95l-1.591-1.591M12 12a2.25 2.25 0 01-2.25 2.25A2.25 2.25 0 017.5 12a2.25 2.25 0 012.25-2.25A2.25 2.25 0 0112 12z" /></svg>
+            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
+        </button>
+        <a href="/login" class="btn-nav">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <h1>The Assessment Platform Built for Tomorrow.</h1>
+          <p>Create, distribute, and analyze exams with a powerful and intuitive suite of tools designed for modern educational needs.</p>
+          <a href="/login" class="btn-primary">Get Started</a>
+        </div>
+        <div class="hero-illustration">
+          <svg viewBox="0 0 552 384" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="552" height="384" rx="24" class="illustration-bg"/>
+            <rect x="24" y="24" width="222" height="336" rx="12" fill="var(--bg-main)"/>
+            <rect x="40" y="40" width="190" height="12" rx="6" fill="var(--border-color)"/>
+            <rect x="40" y="64" width="120" height="12" rx="6" fill="var(--border-color)"/>
+            <rect x="40" y="104" width="190" height="240" rx="6" class="illustration-bg"/>
+            <path d="M286 112H418c4.418 0 8 3.582 8 8v32c0 4.418-3.582 8-8 8H286c-4.418 0-8-3.582-8-8v-32c0-4.418 3.582-8 8-8z" fill="var(--bg-main)"/>
+            <path d="M302 128h92" stroke="var(--border-color)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="420" cy="136" r="8" class="illustration-accent" fill="#6D28D9"/>
+            <rect x="278" y="184" width="242" height="176" rx="12" fill="var(--bg-main)"/>
+            <rect x="294" y="200" width="120" height="12" rx="6" fill="var(--border-color)"/>
+            <circle cx="310" cy="240" r="16" class="illustration-bg"/>
+            <rect x="342" y="234" width="100" height="12" rx="6" fill="var(--border-color)"/>
+            <circle cx="310" cy="288" r="16" class="illustration-bg"/>
+            <rect x="342" y="282" width="140" height="12" rx="6" fill="var(--border-color)"/>
+            <circle cx="310" cy="336" r="16" class="illustration-bg"/>
+            <rect x="342" y="330" width="80" height="12" rx="6" fill="var(--border-color)"/>
+            <path d="M448 36c0-5.523 4.477-10 10-10h44c5.523 0 10 4.477 10 10v44c0 5.523-4.477 10-10 10h-44c-5.523 0-10-4.477-10-10V36z" class="illustration-accent" fill="#6D28D9"/>
+            <path d="M464 54l12 12 24-24" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="feature-section">
+      <div class="container">
+        <div class="feature-text">
+          <h2>Secure & Reliable by Default</h2>
+          <p>With built-in proctoring tools and end-to-end data encryption, you can conduct assessments with confidence, knowing your data is secure and your results are trustworthy.</p>
+        </div>
+        <div class="feature-illustration">
+          <svg viewBox="0 0 448 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="448" height="320" rx="24" class="illustration-bg"/>
+            <path d="M72 160h304v96c0 17.673-14.327 32-32 32H104c-17.673 0-32-14.327-32-32V160z" fill="var(--bg-main)"/>
+            <path d="M72 160h304v-32c0-26.51-21.49-48-48-48H120c-26.51 0-48 21.49-48 48v32z" fill="var(--border-color)"/>
+            <path d="M224 48c17.673 0 32 14.327 32 32v48H192V80c0-17.673 14.327-32 32-32z" fill="#9ca3af"/>
+            <circle cx="224" cy="224" r="32" class="illustration-accent" fill="#6D28D9"/>
+            <path d="M216 224l6 6 10-10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section alt reversed">
+      <div class="container">
+        <div class="feature-text">
+          <h2>Insightful Performance Analytics</h2>
+          <p>Go beyond simple scores. Our analytics dashboard helps you visualize student performance, identify knowledge gaps, and track progress over time with powerful, easy-to-understand charts.</p>
+        </div>
+        <div class="feature-illustration">
+          <svg viewBox="0 0 448 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="448" height="320" rx="24" fill="var(--bg-main)"/>
+            <rect x="24" y="24" width="400" height="272" rx="12" class="illustration-bg"/>
+            <path d="M80 240V160" class="illustration-accent-stroke" stroke="#6D28D9" stroke-width="32" stroke-linecap="round"/>
+            <path d="M160 240V120" stroke="#a5b4fc" stroke-width="32" stroke-linecap="round"/>
+            <path d="M240 240V180" stroke="#a5b4fc" stroke-width="32" stroke-linecap="round"/>
+            <path d="M320 240V80" stroke="#a5b4fc" stroke-width="32" stroke-linecap="round"/>
+            <path d="M64 240h320" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Transform Your Assessments?</h2>
+        <p>Join hundreds of institutions already leveraging our platform to create a better testing experience.</p>
+        <a href="/login" class="btn-primary">Get Started Today</a>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 ExamSetu</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Function to apply the saved theme on page load
+    const applyTheme = () => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+        }
+    };
+
+    // Event listener for the toggle button
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        // Save the user's preference to localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Apply the theme when the page loads
+    document.addEventListener('DOMContentLoaded', applyTheme);
+  </script>
+
+</body>
+</html>

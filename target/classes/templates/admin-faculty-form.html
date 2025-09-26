@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Faculty</title>
+</head>
+<body>
+  <h2 th:text="${faculty.id == null ? 'Add Faculty' : 'Edit Faculty'}"></h2>
+  <form th:action="@{${faculty.id == null ? '/admin/faculty/add' : '/admin/faculty/edit/' + faculty.id}}" 
+        method="post" th:object="${faculty}">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/>
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required/><br/>
+    <label>Course:</label>
+    <input type="text" th:field="*{course}" required/><br/>
+    <label>Password:</label>
+    <input type="password" th:field="*{password}" required/><br/>
+    <button type="submit">Save</button>
+  </form>
+  <a th:href="@{/admin/faculty}">Back to Faculty</a>
+</body>
+</html>

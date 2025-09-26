@@ -6,34 +6,42 @@
   <style>
     body {
       font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: #f8fafc;
+      background: #f1f5f9;
       margin: 0;
       padding: 50px 0;
       color: #1e293b;
     }
 
     .container {
-      max-width: 950px;
+      max-width: 900px;
       margin: auto;
       background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border-radius: 14px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
       padding: 40px 50px;
     }
 
     h2 {
-      font-size: 26px;
-      font-weight: 600;
-      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 30px;
       text-align: center;
       color: #0f172a;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 30px 0 20px;
+      color: #1e293b;
+      border-left: 4px solid #2563eb;
+      padding-left: 10px;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px 30px;
+      gap: 20px 28px;
     }
 
     .form-group {
@@ -50,8 +58,8 @@
 
     input, textarea {
       border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 12px 14px;
       font-size: 14px;
       background: #f9fafb;
       transition: border-color 0.2s ease, background 0.2s ease;
@@ -63,82 +71,82 @@
       background: #fff;
     }
 
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
     .full-width {
       grid-column: 1 / -1;
     }
 
-    button {
+    .btn {
       display: inline-block;
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 22px;
+      padding: 12px 24px;
       font-size: 15px;
       font-weight: 500;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 25px;
-      transition: background 0.2s ease;
-    }
-
-    button:hover {
-      background: #1e40af;
-    }
-
-    hr {
       border: none;
-      border-top: 1px solid #e2e8f0;
-      margin: 50px 0 30px;
+      transition: background 0.2s ease;
+      margin-top: 15px;
     }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1e40af; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
 
     .question-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
+      margin-top: 25px;
+      border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .question-table th, .question-table td {
       padding: 14px 12px;
-      border-bottom: 1px solid #e2e8f0;
       font-size: 14px;
       text-align: left;
-      vertical-align: top;
     }
 
     .question-table th {
       background: #f8fafc;
       color: #334155;
       font-weight: 600;
+      border-bottom: 2px solid #e2e8f0;
     }
 
-    .question-table tr:hover {
+    .question-table tr:nth-child(even) {
       background: #f9fafb;
     }
 
     .action-btn {
       display: inline-block;
-      padding: 6px 12px;
+      padding: 7px 14px;
       font-size: 13px;
       border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      color: #fff;
       font-weight: 500;
-      margin-right: 6px;
+      margin-right: 8px;
       text-decoration: none;
+      color: #fff;
+      transition: background 0.2s ease;
     }
-
     .edit-btn { background: #f59e0b; }
     .edit-btn:hover { background: #d97706; }
-
     .delete-btn { background: #ef4444; }
     .delete-btn:hover { background: #b91c1c; }
 
-    .save-btn { background: #16a34a; }
-    .save-btn:hover { background: #15803d; }
+    .alert-warning {
+      margin-top: 25px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      font-weight: 600;
+      padding: 14px 16px;
+      border-radius: 8px;
+    }
 
     .back-link {
       display: inline-block;
@@ -152,104 +160,99 @@
       text-decoration: underline;
     }
 
-    .edit-form {
-      display: none;
-      margin-top: 10px;
+    .card-section {
+      margin-bottom: 35px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
     }
   </style>
 </head>
 <body>
-
 <div class="container">
   <h2>Create Exam</h2>
 
   <!-- Exam Form -->
-  <form th:action="@{/faculty/exams}" method="post" th:object="${exam}">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Exam Title</label>
-        <input type="text" th:field="*{title}" placeholder="e.g. Midterm Exam" required />
+  <div class="card-section">
+    <form th:action="@{/faculty/exams}" method="post" th:object="${exam}">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Exam Title</label>
+          <input type="text" th:field="*{title}" placeholder="e.g. Midterm Exam" required />
+        </div>
+        <div class="form-group">
+          <label>Course Name</label>
+          <input type="text" th:field="*{course}" placeholder="e.g. Java Programming" required />
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" th:field="*{date}" required />
+        </div>
+        <div class="form-group">
+          <label>Duration (minutes)</label>
+          <input type="number" th:field="*{duration}" placeholder="60" required />
+        </div>
       </div>
-
-      <div class="form-group">
-        <label>Course Name</label>
-        <input type="text" th:field="*{course}" placeholder="e.g. Java Programming" required />
-      </div>
-
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" th:field="*{date}" required />
-      </div>
-
-      <div class="form-group">
-        <label>Duration (minutes)</label>
-        <input type="number" th:field="*{duration}" placeholder="60" required />
-      </div>
-    </div>
-
-    <button type="submit">Create Exam</button>
-  </form>
-
-  <hr>
+      <button type="submit" class="btn btn-primary">Create Exam</button>
+    </form>
+  </div>
 
   <!-- Add Questions -->
-  <div th:if="${examId}">
-    <h2>Add Question</h2>
-    <form th:action="@{/faculty/exams/{id}/questions(id=${examId})}"
-      method="post" th:object="${question}">
-    <!-- ✅ keep examId hidden -->
-    <input type="hidden" name="examId" th:value="${examId}" />
-
-    <div class="form-grid">
+  <div th:if="${examId}" class="card-section">
+    <h3>Add Question</h3>
+    <form th:action="@{/faculty/exams/{id}/questions(id=${examId})}" method="post" th:object="${question}">
+      <input type="hidden" name="examId" th:value="${examId}" />
+      <div class="form-grid">
         <div class="form-group full-width">
-            <label>Question Text</label>
-            <textarea th:field="*{questionText}" required></textarea>
+          <label>Question Text</label>
+          <textarea th:field="*{questionText}" required></textarea>
         </div>
-
         <div class="form-group full-width">
-            <label>Options (comma separated)</label>
-            <input type="text" th:field="*{options}" required />
+          <label>Options (comma separated)</label>
+          <input type="text" th:field="*{options}" required />
         </div>
-
         <div class="form-group full-width">
-            <label>Correct Answer</label>
-            <input type="text" th:field="*{correctAnswer}" required />
+          <label>Correct Answer</label>
+          <input type="text" th:field="*{correctAnswer}" required />
         </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Question</button>
+    </form>
+
+    <!-- Questions Table -->
+    <table class="question-table" th:if="${!#lists.isEmpty(questions)}">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Question</th>
+          <th>Correct Answer</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="q,iter : ${questions}">
+          <td th:text="${iter.index+1}"></td>
+          <td th:text="${q.questionText}"></td>
+          <td th:text="${q.correctAnswer}"></td>
+          <td>
+            <a th:href="@{/faculty/questions/{id}/edit(id=${q.id})}" class="action-btn edit-btn">Edit</a>
+            <a th:href="@{/faculty/questions/{id}/delete(id=${q.id})}"
+               class="action-btn delete-btn"
+               onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Exam Warning + Delete -->
+    <div th:if="${noQuestions}" class="alert-warning">
+      ⚠ This exam has no questions. You may want to delete it.
     </div>
-
-    <button type="submit">Add Question</button>
-</form>
-
-<table class="question-table" th:if="${!#lists.isEmpty(questions)}">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Question</th>
-      <th>Correct Answer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="q,iter : ${questions}">
-      <td th:text="${iter.index+1}"></td>
-      <td th:text="${q.questionText}"></td>
-      <td th:text="${q.correctAnswer}"></td>
-    </tr>
-  </tbody>
-</table>
-
-
+    <form th:action="@{/faculty/exams/{id}/delete(id=${examId})}" method="post" style="margin-top:25px;">
+      <button type="submit" class="btn btn-danger">Delete Exam</button>
+    </form>
   </div>
 
   <a class="back-link" th:href="@{/}">← Back to Home</a>
 </div>
-
-<script>
-  function toggleEdit(btn) {
-    const row = btn.closest('tr');
-    const form = row.querySelector('.edit-form');
-    form.style.display = form.style.display === 'block' ? 'none' : 'block';
-  }
-</script>
-
 </body>
 </html>

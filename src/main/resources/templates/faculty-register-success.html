@@ -1,74 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Faculty Registration Success</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .card {
-            background: #ffffff;
-            padding: 36px 44px;
-            border-radius: 14px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-        }
-        h2 {
-            color: #16a34a;
-            margin-bottom: 18px;
-            font-size: 24px;
-        }
-        .details {
-            text-align: left;
-            background: #f9fafb;
-            border-radius: 10px;
-            padding: 18px 22px;
-            margin: 18px 0;
-            border: 1px solid #e2e8f0;
-        }
-        .details p {
-            margin: 6px 0;
-            color: #334155;
-            font-size: 15px;
-        }
-        a {
-            display: inline-block;
-            margin-top: 16px;
-            padding: 12px 20px;
-            background: #2563eb;
-            color: #ffffff;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-        a:hover {
-            background: #1e3a8a;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Faculty Registration Success</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #1e293b;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 40px 50px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .success-banner {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 600;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #166534;
+    }
+
+    .details {
+      text-align: left;
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0 28px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .details p {
+      margin: 10px 0;
+      color: #334155;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 12px 22px;
+      background: #2563eb;
+      color: #ffffff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+  </style>
 </head>
 <body>
 <div class="card">
-    <h2>Registration Successful</h2>
+  <div class="success-banner">Registration Successful</div>
 
-    <div class="details">
-        <p><strong>Faculty ID:</strong> <span th:text="${faculty.id}"></span></p>
-        <p><strong>Name:</strong> <span th:text="${faculty.name}"></span></p>
-        <p><strong>Email:</strong> <span th:text="${faculty.email}"></span></p>
-        <p><strong>Course:</strong> <span th:text="${faculty.course}"></span></p>
-    </div>
+  <h2>Faculty Details</h2>
 
-    <a th:href="@{/}">Back to Home</a>
+  <div class="details">
+    <p><strong>Faculty ID:</strong> <span th:text="${faculty.id}"></span></p>
+    <p><strong>Name:</strong> <span th:text="${faculty.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${faculty.email}"></span></p>
+    <p><strong>Course:</strong> <span th:text="${faculty.course}"></span></p>
+  </div>
+
+  <a th:href="@{/}" class="btn-primary">Back to Home</a>
 </div>
 </body>
 </html>

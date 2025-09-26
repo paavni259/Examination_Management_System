@@ -1,16 +1,9 @@
-// Updated StudentController.java
 package com.example.apcproject.controller;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.apcproject.model.Answer;
 import com.example.apcproject.model.Result;
@@ -22,10 +15,12 @@ import com.example.apcproject.service.StudentService;
 public class StudentController {
 
     private final StudentService studentService;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
+    // -------------------- Registration --------------------
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Student s) {
         try {
@@ -35,6 +30,7 @@ public class StudentController {
         }
     }
 
+    // -------------------- Login --------------------
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String identifier,
                                    @RequestParam String password) {
@@ -45,13 +41,16 @@ public class StudentController {
         return ResponseEntity.status(401).body("Invalid credentials");
     }
 
+    // -------------------- Submit Exam --------------------
     @PostMapping("/{studentId}/exams/{examId}/submit")
-    public ResponseEntity<List<Answer>> submit(@PathVariable String studentId,
-                                               @PathVariable String examId,
-                                               @RequestBody List<Answer> answers) {
-        return ResponseEntity.ok(studentService.submitAnswers(answers, examId, studentId));
+    public ResponseEntity<Result> submit(@PathVariable String studentId,
+                                         @PathVariable String examId,
+                                         @RequestBody List<Answer> answers) {
+        Result result = studentService.submitAnswers(answers, examId, studentId);
+        return ResponseEntity.ok(result);
     }
 
+    // -------------------- Results --------------------
     @GetMapping("/{studentId}/results/{examId}")
     public ResponseEntity<Result> getResult(@PathVariable String studentId,
                                             @PathVariable String examId) {

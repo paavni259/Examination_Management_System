@@ -1,11 +1,9 @@
 package com.example.apcproject.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.apcproject.model.Answer;
@@ -24,19 +22,21 @@ public class StudentService {
     private final AnswerRepository answerRepo;
     private final QuestionRepository questionRepo;
     private final ResultRepository resultRepo;
+    private final PasswordEncoder passwordEncoder;
 
     public StudentService(StudentRepository studentRepo,
                           AnswerRepository answerRepo,
                           QuestionRepository questionRepo,
-                          ResultRepository resultRepo) {
+                          ResultRepository resultRepo,
+                          PasswordEncoder passwordEncoder) {
         this.studentRepo = studentRepo;
         this.answerRepo = answerRepo;
         this.questionRepo = questionRepo;
         this.resultRepo = resultRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    /* ------------ Auth & Registration ------------ */
-
+    /* ================= Registration ================= */
     public Student register(Student s) {
         if (s.getEmail() != null && studentRepo.existsByEmail(s.getEmail())) {
             throw new IllegalArgumentException("Email already registered");
@@ -44,149 +44,71 @@ public class StudentService {
         if (s.getRollNumber() != null && studentRepo.existsByRollNumber(s.getRollNumber())) {
             throw new IllegalArgumentException("Roll number already registered");
         }
+        s.setPassword(passwordEncoder.encode(s.getPassword()));
         return studentRepo.save(s);
     }
 
-    /** Login by email OR roll number (identifier). */
-    public Student loginByIdentifier(String identifier, String password) {
-        Optional<Student> opt = identifier != null && identifier.contains("@")
+    /* ================= Login ================= */
+    public Student loginByIdentifier(String identifier, String rawPassword) {
+        Optional<Student> opt = (identifier != null && identifier.contains("@"))
                 ? studentRepo.findByEmail(identifier)
                 : studentRepo.findByRollNumber(identifier);
 
-        return opt.filter(u -> Objects.equals(u.getPassword(), password)).orElse(null);
+        return opt.filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()))
+                  .orElse(null);
     }
 
-    /** Keep this only if you still use email-only login in some controller paths. */
-    public Student login(String email, String password) {
-        return studentRepo.findByEmail(email)
-                .filter(u -> Objects.equals(u.getPassword(), password))
-                .orElse(null);
-    }
-
-    /* ------------ Exam Submission & Results ------------ */
-
-    /**
-     * Submit answers (list binding from Thymeleaf form).
-     * - Ensures examId and studentId on each answer
-     * - Auto-grades (5 points per correct)
-     * - Upserts Result for (studentId, examId)
-     */
-    /* ------------ Exam Submission & Results ------------ */
-
-/**
- * Overload used by REST controller: you already know examId & studentId.
- */
-// public List<Answer> submitAnswers(List<Answer> answers, String examId, String studentId) {
-//     if (answers == null || answers.isEmpty()) return List.of();
-
-//     // Normalize IDs
-//     for (Answer a : answers) {
-//         if (a == null) continue;
-//         a.setExamId(examId);
-//         a.setStudentId(studentId);
-//     }
-
-//     // Fetch all referenced questions once
-//     List<String> qIds = answers.stream()
-//             .filter(Objects::nonNull)
-//             .map(Answer::getQuestionId)
-//             .filter(Objects::nonNull)
-//             .distinct()
-//             .toList();
-
-//     Map<String, Question> questionById = questionRepo.findAllById(qIds).stream()
-//             .collect(Collectors.toMap(Question::getId, q -> q));
-
-//     // Grade: 5 points per exact (case-insensitive, trimmed) match
-//     int total = 0;
-//     for (Answer a : answers) {
-//         if (a == null) continue;
-//         Question q = questionById.get(a.getQuestionId());
-//         int mark = 0;
-//         if (q != null) {
-//             String expected = safe(q.getCorrectAnswer());
-//             String actual   = safe(a.getAnswerText());
-//             if (!expected.isEmpty() && expected.equalsIgnoreCase(actual)) {
-//                 mark = 5;
-//             }
-//         }
-//         a.setMarks(mark);
-//         total += mark;
-//     }
-
-//     // Save answers
-//     List<Answer> saved = answerRepo.saveAll(answers);
-
-//     // Upsert result
-//     Result result = resultRepo.findByStudentIdAndExamId(studentId, examId).orElseGet(Result::new);
-//     result.setStudentId(studentId);
-//     result.setExamId(examId);
-//     result.setMarks(total);
-//     result.setStatus(total >= 40 ? "Pass" : "Fail");
-//     resultRepo.save(result);
-
-//     return saved;
-// }
-
-/**
- * Overload used by Thymeleaf form: studentId is inside each Answer (set in controller).
- * Returns saved answers.
- */
-public List<Answer> submitAnswers(List<Answer> answers, String examId, String studentId) {
-    if (answers == null || answers.isEmpty()) return List.of();
-
-    // Normalize IDs
-    for (Answer a : answers) {
-        if (a == null) continue;
-        a.setExamId(examId);
-        a.setStudentId(studentId);
-    }
-
-    // Fetch all questions for this exam
-    List<Question> questions = questionRepo.findByExamId(examId);
-    Map<String, Question> questionById = questions.stream()
-            .collect(Collectors.toMap(Question::getId, q -> q));
-
-    int correctCount = 0;
-    for (Answer a : answers) {
-        if (a == null) continue;
-        Question q = questionById.get(a.getQuestionId());
-        int mark = 0;
-        if (q != null) {
-            String expected = safe(q.getCorrectAnswer());
-            String actual   = safe(a.getAnswerText());
-            if (!expected.isEmpty() && expected.equalsIgnoreCase(actual)) {
-                mark = 1; // give 1 mark for each correct
-                correctCount++;
-            }
+    /* ================= Spring Security Helpers ================= */
+    public Student findByEmailOrRoll(String username) {
+        if (username == null) return null;
+        if (username.contains("@")) {
+            return studentRepo.findByEmail(username).orElse(null);
+        } else {
+            return studentRepo.findByRollNumber(username).orElse(null);
         }
-        a.setMarks(mark);
     }
 
-    // Save all answers
-    List<Answer> saved = answerRepo.saveAll(answers);
+    public boolean passwordMatches(Student s, String raw) {
+        return s != null && passwordEncoder.matches(raw, s.getPassword());
+    }
 
-    // Calculate pass/fail dynamically based on total questions
-    int totalQuestions = questions.size();
-    double percentage = (correctCount * 100.0) / totalQuestions;
+    public String encodePassword(String raw) {
+        return passwordEncoder.encode(raw);
+    }
 
-    Result result = resultRepo.findByStudentIdAndExamId(studentId, examId).orElseGet(Result::new);
-    result.setStudentId(studentId);
-    result.setExamId(examId);
-    result.setMarks(correctCount);
-    result.setStatus(percentage >= 40 ? "Pass" : "Fail");
-    resultRepo.save(result);
+    /* ================= Exam Submission & Results ================= */
+    public Result submitAnswers(List<Answer> answers, String examId, String studentId) {
+        int correctCount = 0;
+        int totalQuestions = answers.size();
 
-    return saved;
-}
+        for (Answer ans : answers) {
+            Question q = questionRepo.findById(ans.getQuestionId()).orElse(null);
 
+            if (q != null && q.getCorrectAnswer().equalsIgnoreCase(ans.getAnswerText())) {
+                ans.setCorrect(true);
+                ans.setMarks(1);
+                correctCount++;
+            } else {
+                ans.setCorrect(false);
+                ans.setMarks(0);
+            }
 
-/* ------------ Helpers ------------ */
+            ans.setStudentId(studentId);
+            ans.setExamId(examId);
+            answerRepo.save(ans);
+        }
 
-private static String safe(String s) {
-    return s == null ? "" : s.trim();
-}
+        Result result = resultRepo.findByStudentIdAndExamId(studentId, examId)
+                                  .orElse(new Result());
 
+        result.setStudentId(studentId);
+        result.setExamId(examId);
+        result.setMarks(correctCount);
+        result.setTotalMarks(totalQuestions);
+        result.setStatus(correctCount >= (totalQuestions / 2) ? "Pass" : "Fail");
+
+        return resultRepo.save(result);
+    }
 
     public Optional<Result> getResult(String studentId, String examId) {
         return resultRepo.findByStudentIdAndExamId(studentId, examId);
@@ -196,4 +118,20 @@ private static String safe(String s) {
         return resultRepo.findByStudentId(studentId);
     }
 
+    /* ================= Admin Helpers ================= */
+    public List<Student> getAllStudents() {
+        return studentRepo.findAll();
+    }
+
+    public Optional<Student> findById(String id) {
+        return studentRepo.findById(id);
+    }
+
+    public void deleteById(String id) {
+        studentRepo.deleteById(id);
+    }
+
+    public Student save(Student s) {
+        return studentRepo.save(s);
+    }
 }
