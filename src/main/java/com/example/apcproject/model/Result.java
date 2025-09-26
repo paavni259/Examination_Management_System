@@ -2,8 +2,13 @@ package com.example.apcproject.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 
 @Document(collection = "results")
+@CompoundIndexes({
+    @CompoundIndex(name = "student_exam_unique", def = "{'studentId': 1, 'examId': 1}", unique = true)
+})
 public class Result {
     @Id
     private String id;

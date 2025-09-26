@@ -78,6 +78,11 @@ public class StudentService {
 
     /* ================= Exam Submission & Results ================= */
     public Result submitAnswers(List<Answer> answers, String examId, String studentId) {
+        // Check if student has already taken this exam
+        if (resultRepo.findByStudentIdAndExamId(studentId, examId).isPresent()) {
+            throw new IllegalStateException("You have already taken this exam. Each student can only take an exam once.");
+        }
+        
         int correctCount = 0;
         int totalQuestions = answers.size();
 
@@ -98,9 +103,7 @@ public class StudentService {
             answerRepo.save(ans);
         }
 
-        Result result = resultRepo.findByStudentIdAndExamId(studentId, examId)
-                                  .orElse(new Result());
-
+        Result result = new Result();
         result.setStudentId(studentId);
         result.setExamId(examId);
         result.setMarks(correctCount);

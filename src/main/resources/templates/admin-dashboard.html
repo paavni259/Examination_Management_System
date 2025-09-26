@@ -221,15 +221,32 @@
       <section class="main-grid">
         <div class="chart-container">
           <div class="container-header">
-            <h2>Users Overview</h2>
-            <a href="#">View Report</a>
+            <h2>Quick Actions</h2>
+            <a href="#">View All</a>
           </div>
-          <canvas id="userChart"></canvas>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <a th:href="@{/admin/students}" class="btn" style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👥</div>
+              <div>Manage Students</div>
+            </a>
+            <a th:href="@{/admin/faculty}" class="btn" style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👨‍🏫</div>
+              <div>Manage Faculty</div>
+            </a>
+            <a th:href="@{/events}" class="btn" style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
+              <div>View Events</div>
+            </a>
+            <a th:href="@{/admin/students/add}" class="btn" style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">➕</div>
+              <div>Add Student</div>
+            </a>
+          </div>
         </div>
         <div class="activity-container">
           <div class="container-header">
-            <h2>Recent Activity</h2>
-            <a href="#">View All</a>
+            <h2>Recent Students</h2>
+            <a th:href="@{/admin/students}">View All</a>
           </div>
           <ul class="activity-list">
             <li th:each="student : ${recentStudents}">

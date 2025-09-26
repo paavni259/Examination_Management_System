@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Exam Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .nav h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .event-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        .event-meta {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .event-description {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .user-info h3 {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="nav">
+                <h1>📅 Events</h1>
+                <div class="nav-links">
+                    <a th:href="@{/}">Home</a>
+                    <a th:href="@{/login}">Login</a>
+                    <a th:if="${isOAuth2User}" th:href="@{/events/my-events}">My Events</a>
+                    <a th:if="${isOAuth2User}" th:href="@{/events/create}">Create Event</a>
+                </div>
+            </div>
+            
+            <div th:if="${isOAuth2User}" class="user-info">
+                <h3>Welcome, <span th:text="${userName}">User</span>!</h3>
+                <p>You're logged in with OAuth2. You can create and manage your own events.</p>
+            </div>
+            
+            <div th:unless="${isOAuth2User}">
+                <p>Sign in with Google to create and manage events</p>
+                <a href="/oauth2/authorization/google" class="btn">Sign in with Google</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div th:if="${#lists.isEmpty(events)}" class="empty-state">
+            <h3>No events available</h3>
+            <p>Check back later for upcoming events!</p>
+        </div>
+        
+        <div th:unless="${#lists.isEmpty(events)}" class="events-grid">
+            <div th:each="event : ${events}" class="event-card">
+                <div class="event-title" th:text="${event.title}">Event Title</div>
+                <div class="event-meta">
+                    <div>📅 <span th:text="${#temporals.format(event.startTime, 'MMM dd, yyyy HH:mm')}">Date</span></div>
+                    <div th:if="${event.location}">📍 <span th:text="${event.location}">Location</span></div>
+                    <div>👤 <span th:text="${event.organizerName}">Organizer</span></div>
+                </div>
+                <div class="event-description" th:text="${event.description}">Event description...</div>
+                <div class="event-actions">
+                    <a th:if="${isOAuth2User && userEmail == event.organizerEmail}" 
+                       th:href="@{/events/delete/{id}(id=${event.id})}" 
+                       class="btn btn-secondary"
+                       onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -52,6 +52,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                              "/students/register-form",
                              "/faculty/register-form",
                              "/admin/register-form",
+                             "/events", "/events/**",
                              "/css/**", "/js/**").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/change-password").authenticated()
