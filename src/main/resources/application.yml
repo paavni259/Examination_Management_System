@@ -3,22 +3,8 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/apcdb
       database: apcdb
-
-server:
-  port: 8000
-
-spring.main.allow-bean-definition-overriding=true:
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: when_authorized
-
-spring:
+  main:
+    allow-bean-definition-overriding: true
   security:
     oauth2:
       client:
@@ -30,3 +16,15 @@ spring:
         provider:
           google:
             issuer-uri: https://accounts.google.com
+
+server:
+  port: 8000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
